@@ -32,6 +32,7 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public GetEmployeeResponse getById(int id) {
+        checkIfExistsEmployeeById(id);
         Employee employee = repository.findById(id).orElseThrow();
         GetEmployeeResponse response = mapper.map(employee,GetEmployeeResponse.class);
         return response;
@@ -48,6 +49,7 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public UpdateEmployeeResponse update(int id, UpdateEmployeeRequest request) {
+        checkIfExistsEmployeeById(id);
         Employee employee = mapper.map(request,Employee.class);
         employee.setId(id);
         repository.save(employee);
@@ -57,6 +59,12 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public void delete(int id) {
+        checkIfExistsEmployeeById(id);
         repository.deleteById(id);
+    }
+
+    private void checkIfExistsEmployeeById(int id){
+        if(!repository.existsById(id))
+            throw new RuntimeException("Employee does not exists. id:" + id);
     }
 }

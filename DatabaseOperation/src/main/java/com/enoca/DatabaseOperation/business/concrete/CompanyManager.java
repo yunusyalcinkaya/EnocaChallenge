@@ -33,6 +33,7 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public GetCompanyResponse getById(int id) {
+        checkIfExistsCompanyById(id);
         Company company = repository.findById(id).orElseThrow();
         GetCompanyResponse response = mapper.map(company, GetCompanyResponse.class);
         return response;
@@ -49,6 +50,7 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public UpdateCompanyResponse update(int id, UpdateCompanyRequest request) {
+        checkIfExistsCompanyById(id);
         Company company = mapper.map(request,Company.class);
         company.setId(id);
         repository.save(company);
@@ -58,6 +60,12 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public void delete(int id) {
+        checkIfExistsCompanyById(id);
         repository.deleteById(id);
+    }
+
+    private void checkIfExistsCompanyById(int id){
+        if (!repository.existsById(id))
+            throw new RuntimeException("Company does not exists. id:"+ id);
     }
 }
