@@ -1,5 +1,6 @@
 package com.enoca.DatabaseOperation.business.dto.request.update;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCompanyRequest {
-    private String name;
-    private String address;
+    @NotBlank
+    String name;
+
+    @NotBlank
+    String address;
 }
