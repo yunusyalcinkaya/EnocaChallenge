@@ -18,6 +18,7 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String department;
+    private String nationalityId;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")

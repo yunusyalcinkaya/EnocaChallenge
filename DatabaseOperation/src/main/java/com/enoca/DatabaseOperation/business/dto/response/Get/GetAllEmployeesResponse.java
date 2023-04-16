@@ -11,6 +11,7 @@ public class GetAllEmployeesResponse {
     private int id;
     private String firstName;
     private String lastName;
+    private String nationalityId;
     private String department;
     private int companyId;
 }

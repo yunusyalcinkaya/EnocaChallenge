@@ -7,6 +7,7 @@ import com.enoca.DatabaseOperation.business.dto.response.Get.GetAllEmployeesResp
 import com.enoca.DatabaseOperation.business.dto.response.Get.GetEmployeeResponse;
 import com.enoca.DatabaseOperation.business.dto.response.create.CreateEmployeeResponse;
 import com.enoca.DatabaseOperation.business.dto.response.update.UpdateEmployeeResponse;
+import com.enoca.DatabaseOperation.business.rules.EmployeeBusinessRules;
 import com.enoca.DatabaseOperation.entities.Employee;
 import com.enoca.DatabaseOperation.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class EmployeeManager implements EmployeeService {
 
     private  final EmployeeRepository repository;
     private final ModelMapper mapper;
+    private final EmployeeBusinessRules rules;
 
     @Override
     public List<GetAllEmployeesResponse> getAll() {
@@ -32,7 +34,7 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public GetEmployeeResponse getById(int id) {
-        checkIfExistsEmployeeById(id);
+        rules.checkIfExistsEmployeeById(id);
         Employee employee = repository.findById(id).orElseThrow();
         GetEmployeeResponse response = mapper.map(employee,GetEmployeeResponse.class);
         return response;
@@ -40,6 +42,7 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public CreateEmployeeResponse add(CreateEmployeeRequest request) {
+        rules.checkIfExistsEmployeeByNationalityId(request.getNationalityId());
         Employee employee = mapper.map(request,Employee.class);
         employee.setId(0);
         repository.save(employee);
@@ -49,7 +52,7 @@ public class EmployeeManager implements EmployeeService {
 
     @Override
     public UpdateEmployeeResponse update(int id, UpdateEmployeeRequest request) {
-        checkIfExistsEmployeeById(id);
+        rules.checkIfExistsEmployeeById(id);
         Employee employee = mapper.map(request,Employee.class);
         employee.setId(id);
         repository.save(employee);
@@ -58,13 +61,9 @@ public class EmployeeManager implements EmployeeService {
     }
 
     @Override
-    public void delete(int id) {
-        checkIfExistsEmployeeById(id);
+    public void deleteById(int id) {
+        rules.checkIfExistsEmployeeById(id);
         repository.deleteById(id);
     }
 
-    private void checkIfExistsEmployeeById(int id){
-        if(!repository.existsById(id))
-            throw new RuntimeException("Employee does not exists. id:" + id);
-    }
 }

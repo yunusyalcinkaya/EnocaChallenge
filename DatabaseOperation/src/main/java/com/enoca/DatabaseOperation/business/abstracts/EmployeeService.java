@@ -15,5 +15,5 @@ public interface EmployeeService {
     GetEmployeeResponse getById(int id);
     CreateEmployeeResponse add(CreateEmployeeRequest request);
     UpdateEmployeeResponse update(int id, UpdateEmployeeRequest request);
-    void delete(int id);
+    void deleteById(int id);
 }

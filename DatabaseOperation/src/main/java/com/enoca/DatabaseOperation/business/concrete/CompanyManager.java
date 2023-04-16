@@ -8,6 +8,7 @@ import com.enoca.DatabaseOperation.business.dto.response.Get.GetAllCompaniesResp
 import com.enoca.DatabaseOperation.business.dto.response.Get.GetCompanyResponse;
 import com.enoca.DatabaseOperation.business.dto.response.create.CreateCompanyResponse;
 import com.enoca.DatabaseOperation.business.dto.response.update.UpdateCompanyResponse;
+import com.enoca.DatabaseOperation.business.rules.CompanyBusinessRules;
 import com.enoca.DatabaseOperation.entities.Company;
 import com.enoca.DatabaseOperation.repository.CompanyRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class CompanyManager implements CompanyService {
 
     private  final CompanyRepository repository;
     private final ModelMapper mapper;
+    private final CompanyBusinessRules rules;
 
     @Override
     public List<GetAllCompaniesResponse> getAll() {
@@ -33,7 +35,7 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public GetCompanyResponse getById(int id) {
-        checkIfExistsCompanyById(id);
+        rules.checkIfExistsCompanyById(id);
         Company company = repository.findById(id).orElseThrow();
         GetCompanyResponse response = mapper.map(company, GetCompanyResponse.class);
         return response;
@@ -50,7 +52,7 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public UpdateCompanyResponse update(int id, UpdateCompanyRequest request) {
-        checkIfExistsCompanyById(id);
+        rules.checkIfExistsCompanyById(id);
         Company company = mapper.map(request,Company.class);
         company.setId(id);
         repository.save(company);
@@ -59,13 +61,9 @@ public class CompanyManager implements CompanyService {
     }
 
     @Override
-    public void delete(int id) {
-        checkIfExistsCompanyById(id);
+    public void deleteById(int id) {
+        rules.checkIfExistsCompanyById(id);
         repository.deleteById(id);
     }
 
-    private void checkIfExistsCompanyById(int id){
-        if (!repository.existsById(id))
-            throw new RuntimeException("Company does not exists. id:"+ id);
-    }
 }

@@ -15,5 +15,5 @@ public interface CompanyService {
     GetCompanyResponse getById(int id);
     CreateCompanyResponse add(CreateCompanyRequest request);
     UpdateCompanyResponse update(int id, UpdateCompanyRequest request);
-    void delete(int id);
+    void deleteById(int id);
 }
